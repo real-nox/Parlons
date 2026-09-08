@@ -1,5 +1,14 @@
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from "@react-native-google-signin/google-signin";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+GoogleSignin.configure({
+  webClientId:
+    "1003225010434-mic1vnej0uebslptrh5feekbtgoot80e.apps.googleusercontent.com",
+});
 
 export default function Index() {
   return (
@@ -17,7 +26,14 @@ export default function Index() {
         <Text style={styles.text}>Apprenez de vos erreurs</Text>
       </View>
 
-      <View></View>
+      <View>
+        <GoogleSigninButton
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={() => {}}
+          disabled={false}
+        />
+      </View>
     </SafeAreaView>
   );
 }
