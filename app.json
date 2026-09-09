@@ -4,7 +4,7 @@
     "slug": "Parlons",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "",
     "scheme": "parlons",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -13,16 +13,16 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "",
+        "backgroundImage": "",
+        "monochromeImage": ""
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.ranox.parlons"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": ""
     },
     "plugins": [
       "expo-router",
@@ -37,17 +37,17 @@
             "backgroundColor": "#000000"
           }
         }
-      ],
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.ranox.parlons"
-        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "695484e7-1fbe-46cd-9bc8-c348ad3aec38"
+      }
     }
   }
 }
