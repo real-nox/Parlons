@@ -21,7 +21,7 @@ export default function Index() {
     >
       <View style={styles.containerTop}>
         <Text style={styles.title}>
-          Corrig<Text style={{ color: "rgb(0, 77, 165)" }}>é</Text>
+          Parl<Text style={{ color: "rgb(0, 77, 165)" }}>ons</Text>
         </Text>
         <Text style={styles.text}>Apprenez de vos erreurs</Text>
       </View>

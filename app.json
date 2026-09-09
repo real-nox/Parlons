@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Corriger",
-    "slug": "Corriger",
+    "name": "Parlons",
+    "slug": "Parlons",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "corriger",
+    "scheme": "parlons",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.ranox.corriger"
+      "package": "com.ranox.parlons"
     },
     "web": {
       "output": "static",
@@ -41,7 +41,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.ranox.corriger"
+          "iosUrlScheme": "com.ranox.parlons"
         }
       ]
     ],
