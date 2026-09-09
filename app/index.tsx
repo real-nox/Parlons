@@ -1,16 +1,15 @@
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from "@react-native-google-signin/google-signin";
-import { StyleSheet, Text, View } from "react-native";
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-GoogleSignin.configure({
-  webClientId:
-    "1003225010434-mic1vnej0uebslptrh5feekbtgoot80e.apps.googleusercontent.com",
-});
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
+  console.log(process.env.EXPO_PUBLIC_CLIENT_ID_GOOGLE_SIGN_IN);
+  const [request, response, prompt] = Google.useAuthRequest({
+    androidClientId: process.env.EXPO_PUBLIC_CLIENT_ID_GOOGLE_SIGN_IN,
+  });
   return (
     <SafeAreaView
       style={{
@@ -27,10 +26,9 @@ export default function Index() {
       </View>
 
       <View>
-        <GoogleSigninButton
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={() => {}}
+        <Button
+          title="Sign in with Google"
+          onPress={() => prompt}
           disabled={false}
         />
       </View>
