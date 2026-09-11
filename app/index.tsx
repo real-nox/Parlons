@@ -6,10 +6,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
-  console.log(process.env.EXPO_PUBLIC_CLIENT_ID_GOOGLE_SIGN_IN);
-  const [request, response, prompt] = Google.useAuthRequest({
-    androidClientId: process.env.EXPO_PUBLIC_CLIENT_ID_GOOGLE_SIGN_IN,
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGN_IN_ANDROID,
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB,
   });
+
   return (
     <SafeAreaView
       style={{
@@ -22,13 +23,13 @@ export default function Index() {
         <Text style={styles.title}>
           Parl<Text style={{ color: "rgb(0, 77, 165)" }}>ons</Text>
         </Text>
-        <Text style={styles.text}>Apprenez de vos erreurs</Text>
+        <Text style={styles.text}>Apprenez en Parlons</Text>
       </View>
 
       <View>
         <Button
           title="Sign in with Google"
-          onPress={() => prompt}
+          onPress={() => promptAsync()}
           disabled={false}
         />
       </View>
