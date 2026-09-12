@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 //Components
 import TitleComponent from "@/components/titleComponents";
+import { globalStyle } from "@/constants/global";
 
 export default function Index() {
   const [accessToken, setAccessToken] = useState<string>("");
@@ -23,7 +24,7 @@ export default function Index() {
     >
       <View style={styles.containerTop}>
         <TitleComponent />
-        <Text style={styles.text}>Apprenez en Parlons</Text>
+        <Text style={globalStyle.subtitle}>Apprenez en Parlons</Text>
       </View>
 
       <View>
@@ -36,8 +37,5 @@ export default function Index() {
 const styles = StyleSheet.create({
   containerTop: {
     alignItems: "center",
-  },
-  text: {
-    fontSize: 16,
   },
 });
