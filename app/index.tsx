@@ -1,15 +1,17 @@
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-WebBrowser.maybeCompleteAuthSession();
+//Components
+import TitleComponent from "@/components/titleComponents";
 
 export default function Index() {
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGN_IN_ANDROID,
-    webClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB,
-  });
+  const [accessToken, setAccessToken] = useState<string>("");
+
+  useEffect(() => {
+    if (!accessToken) return router.push("/auth/login");
+  }, [accessToken]);
 
   return (
     <SafeAreaView
@@ -20,18 +22,12 @@ export default function Index() {
       }}
     >
       <View style={styles.containerTop}>
-        <Text style={styles.title}>
-          Parl<Text style={{ color: "rgb(0, 77, 165)" }}>ons</Text>
-        </Text>
+        <TitleComponent />
         <Text style={styles.text}>Apprenez en Parlons</Text>
       </View>
 
       <View>
-        <Button
-          title="Sign in with Google"
-          onPress={() => promptAsync()}
-          disabled={false}
-        />
+        <Button title="Sign in" disabled={false} />
       </View>
     </SafeAreaView>
   );
@@ -40,11 +36,6 @@ export default function Index() {
 const styles = StyleSheet.create({
   containerTop: {
     alignItems: "center",
-  },
-  title: {
-    paddingBottom: 15,
-    fontWeight: "bold",
-    fontSize: 40,
   },
   text: {
     fontSize: 16,

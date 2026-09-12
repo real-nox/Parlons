@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
 
-export default function RootLayout() {
+export default function AuthLayout() {
   return (
     <>
       <StatusBar
@@ -10,7 +10,10 @@ export default function RootLayout() {
         translucent={true}
       />
 
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+      </Stack>
     </>
   );
 }
