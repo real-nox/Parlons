@@ -4,7 +4,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 //Components
-import BlueLine from "@/components/lineComponents";
 import TitleComponent from "@/components/titleComponents";
 import { globalStyle } from "@/constants/global";
 import { router } from "expo-router";
@@ -22,8 +21,7 @@ export default function Index() {
       }}
     >
       <View style={styles.container}>
-        <TitleComponent />
-        <BlueLine />
+        <TitleComponent size="large" />
         <Text style={globalStyle.subtitle}>Apprenez en Parlons</Text>
       </View>
 

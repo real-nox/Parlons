@@ -9,7 +9,6 @@ export const globalStyle = StyleSheet.create({
   title: {
     paddingBottom: 10,
     fontWeight: "bold",
-    fontSize: 35,
   },
   subtitle: {
     fontSize: 16,
