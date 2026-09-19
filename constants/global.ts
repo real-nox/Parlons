@@ -7,7 +7,7 @@ export const globalColors = {
 
 export const globalStyle = StyleSheet.create({
   title: {
-    paddingBottom: 15,
+    paddingBottom: 10,
     fontWeight: "bold",
     fontSize: 35,
   },
