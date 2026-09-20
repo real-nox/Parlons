@@ -22,7 +22,7 @@ export default function Index() {
     >
       <View style={styles.container}>
         <TitleComponent size="large" />
-        <Text style={globalStyle.subtitle}>Apprenez en Parlons</Text>
+        <Text style={globalStyle.h3}>Apprenez en Parlons</Text>
       </View>
 
       <View style={styles.container}>
