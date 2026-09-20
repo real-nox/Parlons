@@ -44,7 +44,7 @@ export default function Index() {
 
         <TouchableOpacity
           style={styles.button2}
-          onPress={() => router.replace("/auth/register")}
+          onPress={() => router.replace("/auth/login")}
         >
           <Text style={styles.buttonText2}>Se connecter</Text>
         </TouchableOpacity>
