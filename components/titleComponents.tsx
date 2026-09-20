@@ -9,7 +9,7 @@ const getFontSize = (size: "small" | "medium" | "large"): number => {
     case "medium":
       return 28;
     case "small":
-      return 15;
+      return 20;
     default:
       return 35;
   }
