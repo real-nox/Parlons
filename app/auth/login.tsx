@@ -60,7 +60,7 @@ export default function LoginScreen() {
           ]}
           onPress={() => router.replace("/auth/register")}
         >
-          <Text style={styles.buttonText}> Créer mon compte</Text>
+          <Text style={styles.buttonText}> Se connectez</Text>
           <ArrowRight color="white" />
         </TouchableOpacity>
 
