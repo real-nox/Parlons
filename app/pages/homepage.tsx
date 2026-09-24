@@ -1,3 +1,4 @@
+import { globalStyle } from "@/constants/global";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -6,7 +7,9 @@ export default function Homepage() {
     <SafeAreaView>
       <View style={styles.container}>
         <View>
-          <Text>Welcome Rayane</Text>
+          <Text style={[globalStyle.title, { fontSize: 20 }]}>
+            Welcome, Rayane
+          </Text>
           <Text>Prêt pour révisions?</Text>
         </View>
         <View>
@@ -19,9 +22,9 @@ export default function Homepage() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     margin: 15,
   },
 });
