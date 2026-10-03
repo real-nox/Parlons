@@ -1,21 +1,39 @@
 import TitleComponent from "@/components/titleComponents";
 import { globalColors } from "@/constants/global";
+import { generateThemes } from "@/constants/themes";
 import { router } from "expo-router";
 import { ArrowRight } from "lucide-react-native";
+import { useState } from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const REQUIRED = 5;
+
 export default function Themes() {
-  const DATA = Array.from({ length: 12 }, (_, i) => ({
-    id: `${i}`,
-    title: `Item ${i + 1}`,
-  }));
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [themes, setThemes] = useState(() => generateThemes(10));
+
+  const toggle = (id: string) => {
+    setSelectedThemes((prev: any) => {
+      if (prev.includes(id)) return prev.filter((x: string) => x !== id);
+      if (prev.length >= REQUIRED) return prev;
+      return [...prev, id];
+    });
+  };
+
+  const regenerate = () => {
+    setThemes(generateThemes(10));
+    setSelectedThemes([]);
+  };
+
+  const ready = selectedThemes.length === REQUIRED;
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.leftsubcontainer}>
@@ -28,19 +46,49 @@ export default function Themes() {
       </View>
 
       <View style={styles.boxContainer}>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: 5,
+          }}
+        >
+          <TouchableOpacity onPress={() => regenerate()}>
+            <Text style={{ fontSize: 13, fontWeight: "bold" }}>
+              Proposer d'autre thèmes
+            </Text>
+          </TouchableOpacity>
+          <Text style={{ fontSize: 13, color: globalColors.title2 }}>
+            {selectedThemes.length} sélectionnés
+          </Text>
+        </View>
         <FlatList
-          data={DATA}
+          data={themes}
           numColumns={2}
           keyExtractor={(item) => item.id}
           style={{
             width: "100%",
             gap: 10,
           }}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.gridItem}>
-              <Text style={styles.itemText}>{item.title}</Text>
-            </TouchableOpacity>
-          )}
+          renderItem={({ item }) => {
+            const active = selectedThemes.includes(item.id);
+            const locked = !active && selectedThemes.length >= REQUIRED;
+            return (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => toggle(item.id)}
+                accessibilityState={{ selected: active, disabled: locked }}
+                style={[
+                  styles.gridItem,
+                  active && styles.chipActive,
+                  locked && styles.chipLocked,
+                ]}
+              >
+                <Text style={styles.itemText}>{item.label}</Text>
+              </TouchableOpacity>
+            );
+          }}
         />
       </View>
 
@@ -51,6 +99,7 @@ export default function Themes() {
         <TouchableOpacity
           style={[
             styles.button,
+            !ready && {opacity: 0.5},
             {
               display: "flex",
               flexDirection: "row",
@@ -59,9 +108,10 @@ export default function Themes() {
               width: "100%",
             },
           ]}
-          onPress={() => router.replace("/auth/register")}
+          disabled={!ready}
+          onPress={() => router.replace("/startup/testpositionnement")}
         >
-          <Text style={styles.buttonText}> Se connectez</Text>
+          <Text style={styles.buttonText}> Continuer</Text>
           <ArrowRight color="white" />
         </TouchableOpacity>
       </View>
@@ -94,7 +144,7 @@ const styles = StyleSheet.create({
     color: globalColors.subtitle,
   },
   boxContainer: {
-    padding: 25,
+    padding: 15,
     borderWidth: 2.5,
     borderColor: "transparent",
     borderRadius: 5,
@@ -102,7 +152,7 @@ const styles = StyleSheet.create({
     width: "82.5%",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 15
+    marginBottom: 15,
   },
   button: {
     marginTop: 20,
@@ -120,17 +170,21 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   gridItem: {
-    borderColor: "#acacac",
+    borderColor: "#ebebeb98",
     borderRadius: 10,
     borderWidth: 2,
     padding: 10,
-    width: "45%",
+    width: "47%",
     margin: 5,
     justifyContent: "center",
     alignItems: "center",
   },
   itemText: {
-    color: globalColors.link,
+    color: "#555555",
     fontWeight: "bold",
+    fontSize: 12,
   },
+
+  chipActive: { backgroundColor: "#0042dd0a", borderColor: "#2B59C3" },
+  chipLocked: { opacity: 0.8 },
 });
