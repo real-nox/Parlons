@@ -40,3 +40,44 @@ export const THEME_POOL = [
   { id: 'eco_budget', label: 'Gérer son budget', category: 'economie' },
   { id: 'eco_commerce', label: 'Le commerce en ligne', category: 'economie' },
 ];
+
+const MAX_PER_CATEGORY = 2;
+ 
+/**
+ * @param {number} count nombre de thèmes à proposer (10 par défaut)
+ * @param {Object} history { [themeId]: nbDeFoisChoisi } pour varier les propositions
+ */
+export function generateThemes(count = 10, history: any = {}) {
+  const pool = THEME_POOL.map((t) => ({
+    ...t,
+    weight: 1 / (1 + (history[t.id] || 0)),
+  }));
+ 
+  const picked = [];
+  const perCategory: any = {};
+ 
+  while (picked.length < count && pool.length > 0) {
+    const eligible = pool.filter(
+      (t) => (perCategory[t.category] || 0) < MAX_PER_CATEGORY
+    );
+    const source = eligible.length > 0 ? eligible : pool;
+ 
+    const total = source.reduce((sum, t) => sum + t.weight, 0);
+    let r = Math.random() * total;
+    let chosen = source[source.length - 1];
+    for (const t of source) {
+      r -= t.weight;
+      if (r <= 0) {
+        chosen = t;
+        break;
+      }
+    }
+ 
+    picked.push({ id: chosen.id, label: chosen.label, category: chosen.category });
+    perCategory[chosen.category] = (perCategory[chosen.category] || 0) + 1;
+    pool.splice(pool.findIndex((t) => t.id === chosen.id), 1);
+  }
+ 
+  return picked;
+}
+ 
