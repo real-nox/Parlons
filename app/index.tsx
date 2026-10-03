@@ -12,7 +12,7 @@ export default function Index() {
   const [accessToken, setAccessToken] = useState<string>("");
 
   useEffect(() => {
-    router.replace("./pages/themes");
+    router.replace("./startup/themes");
   }, []);
   return (
     <SafeAreaView
