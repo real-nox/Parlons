@@ -1,3 +1,4 @@
+import StepsComponents from "@/components/stepsComponents";
 import TitleComponent from "@/components/titleComponents";
 import { globalColors } from "@/constants/global";
 import { generateThemes } from "@/constants/themes";
@@ -37,7 +38,16 @@ export default function Themes() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.leftsubcontainer}>
-        <TitleComponent size="small" />
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "90%"}}
+        >
+          <View style={{
+            width: "100%"
+          }}>
+            <TitleComponent size="small" />
+          </View>
+          <StepsComponents maxSteps={2} step={1} />
+        </View>
         <Text style={styles.title}>Choisissez vos thèmes</Text>
         <Text style={styles.p}>
           Sélectionnez ce que vous souhaitez travailler. Vos exercices seront
@@ -99,7 +109,7 @@ export default function Themes() {
         <TouchableOpacity
           style={[
             styles.button,
-            !ready && {opacity: 0.5},
+            !ready && { opacity: 0.5 },
             {
               display: "flex",
               flexDirection: "row",
