@@ -39,7 +39,7 @@ export default function Themes() {
     <SafeAreaView style={styles.container}>
       <View style={styles.leftsubcontainer}>
         <View
-          style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "90%"}}
+          style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "80%"}}
         >
           <View style={{
             width: "100%"
