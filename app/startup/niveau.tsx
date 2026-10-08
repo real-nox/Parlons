@@ -67,7 +67,6 @@ export default function Niveaux() {
             gap: 10,
           }}
           renderItem={({ item }) => {
-            console.log(selectedLevel);
             const active = selectedLevel === item.title
             return (
               <TouchableOpacity
