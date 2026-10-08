@@ -119,7 +119,7 @@ export default function Themes() {
             },
           ]}
           disabled={!ready}
-          onPress={() => router.replace("/startup/testpositionnement")}
+          onPress={() => router.replace("/startup/niveau")}
         >
           <Text style={styles.buttonText}> Continuer</Text>
           <ArrowRight color="white" />
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
   p: {
     fontSize: 14,
     color: globalColors.subtitle,
+    textAlign: "center"
   },
   boxContainer: {
     padding: 15,
