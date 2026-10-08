@@ -81,7 +81,7 @@ export default function Niveaux() {
               >
                 <Text style={[styles.itemTextTitle, active && { color: globalColors.title2}]}>{item.title}</Text>
                 <Text style={styles.itemTextLabel}>{item.label}</Text>
-                <Text style={styles.itemTextDescription}>
+                <Text style={[styles.itemTextDescription, active && { color : globalColors.red, opacity : 0.5}]}>
                   {item.description}
                 </Text>
               </TouchableOpacity>
@@ -107,6 +107,7 @@ export default function Niveaux() {
             },
           ]}
           disabled={!selectedLevel.length}
+          onPress={() => router.replace("/pages/homepage")}
         >
           <Text style={styles.buttonText}> Continuer</Text>
           <ArrowRight color="white" />
