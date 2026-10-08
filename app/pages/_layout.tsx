@@ -31,6 +31,8 @@ export default function PagesLayout() {
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
+
+      <Tabs.Screen name="(writing)" options={{ href: null }} />
     </Tabs>
   );
 }
