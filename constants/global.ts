@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const globalColors = {
   title2: "rgb(0, 77, 165)",
+  red: "#c50000",
   link: "#3d40ff",
   subtitle: "#858585",
 };
