@@ -32,7 +32,6 @@ export default function PagesLayout() {
         }}
       />
 
-      <Tabs.Screen name="(writing)" options={{ href: null }} />
     </Tabs>
   );
 }
