@@ -1,7 +1,7 @@
 import Entete from "@/components/enteteComponents";
 import { globalColors, globalStyle } from "@/constants/global";
 import { router } from "expo-router";
-import { AlignLeft, PenLine, Save } from "lucide-react-native";
+import { AlignLeft, Save } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import {
   Keyboard,
