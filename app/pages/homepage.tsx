@@ -76,7 +76,7 @@ export default function Homepage() {
                   width: "100%",
                 },
               ]}
-              onPress={() => router.replace("/startup/niveau")}
+              onPress={() => router.replace("/(writing)/chooseThemes")}
             >
               <Text style={styles.buttonText}> Nouvelle production</Text>
               <Plus color="white" />
