@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseSignup } from "../lib/supabase";
 
 export async function signUp(
   email: string,
@@ -6,7 +6,7 @@ export async function signUp(
   username: string,
 ) {
   try {
-    const { error } = await supabase.auth.signUp({
+    const { error } = await supabaseSignup.auth.signUp({
       email,
       password,
       options: { data: { username } },
@@ -58,5 +58,3 @@ export async function signOut() {
     return { success: false, error: err.message };
   }
 }
-
-module.exports = { signIn, signOut, signUp };
