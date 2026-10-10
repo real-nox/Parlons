@@ -12,7 +12,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#004a80",
         "foregroundImage": "./assets/ParlonsLogo.png",
         "backgroundImage": "./assets/ParlonsLogo.png",
         "monochromeImage": "./assets/ParlonsLogo.png"
@@ -32,7 +32,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#004a80",
           "dark": {
             "backgroundColor": "#000000"
           }
