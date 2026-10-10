@@ -1,5 +1,4 @@
 import { ArrowRight } from "lucide-react-native";
-import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,11 +8,6 @@ import { globalStyle } from "@/constants/global";
 import { router } from "expo-router";
 
 export default function Index() {
-  const [accessToken, setAccessToken] = useState<string>("");
-
-  useEffect(() => {
-    router.replace("/(writing)/chooseThemes");
-  }, []);
   return (
     <SafeAreaView
       style={{
