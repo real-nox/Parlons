@@ -2,10 +2,13 @@ import StepsComponents from "@/components/stepsComponents";
 import TitleComponent from "@/components/titleComponents";
 import { globalColors } from "@/constants/global";
 import { generateThemes } from "@/constants/themes";
-import { router } from "expo-router";
+import { useAuthContext } from "@/hooks/auth.context";
+import { updateProfileState } from "@/services/profile";
+import { setProfileThemes } from "@/services/startup";
 import { ArrowRight } from "lucide-react-native";
 import { useState } from "react";
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Text,
@@ -19,6 +22,7 @@ const REQUIRED = 5;
 export default function Themes() {
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [themes, setThemes] = useState(() => generateThemes(10));
+  const { profile, setProfile } = useAuthContext();
 
   const toggle = (id: string) => {
     setSelectedThemes((prev: any) => {
@@ -35,15 +39,47 @@ export default function Themes() {
 
   const ready = selectedThemes.length === REQUIRED;
 
+  const saveThemes = async () => {
+    if (!profile) return;
+
+    const selected = themes.filter((t) => selectedThemes.includes(t.id));
+
+    const { success, error } = await setProfileThemes(
+      selected.map((t) => t.label),
+      [...new Set(selected.map((t) => t.category))],
+      profile.id,
+    );
+
+    if (!success) {
+      Alert.alert("Erreur", error);
+      return;
+    }
+
+    const res = await updateProfileState(profile.id, 2);
+
+    if (!res.success) {
+      Alert.alert("Erreur", res.error);
+      return;
+    }
+
+    setProfile(res.profile);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.leftsubcontainer}>
         <View
-          style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "80%"}}
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "80%",
+          }}
         >
-          <View style={{
-            width: "100%"
-          }}>
+          <View
+            style={{
+              width: "100%",
+            }}
+          >
             <TitleComponent size="small" />
           </View>
           <StepsComponents maxSteps={2} step={1} />
@@ -119,7 +155,7 @@ export default function Themes() {
             },
           ]}
           disabled={!ready}
-          onPress={() => router.replace("/startup/niveau")}
+          onPress={saveThemes}
         >
           <Text style={styles.buttonText}> Continuer</Text>
           <ArrowRight color="white" />
@@ -152,7 +188,7 @@ const styles = StyleSheet.create({
   p: {
     fontSize: 14,
     color: globalColors.subtitle,
-    textAlign: "center"
+    textAlign: "center",
   },
   boxContainer: {
     padding: 15,

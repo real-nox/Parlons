@@ -2,10 +2,12 @@ import StepsComponents from "@/components/stepsComponents";
 import TitleComponent from "@/components/titleComponents";
 import { globalColors } from "@/constants/global";
 import { niveaux } from "@/constants/niveaux";
-import { router } from "expo-router";
+import { useAuthContext } from "@/hooks/auth.context";
+import { updateProfileState, updateProfilNiveau } from "@/services/profile";
 import { ArrowRight } from "lucide-react-native";
 import { useState } from "react";
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Text,
@@ -16,8 +18,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Niveaux() {
   const [selectedLevel, setSelectedLevel] = useState<string>("");
+  const { profile, setProfile } = useAuthContext();
 
+  const saveNiveau = async () => {
+    if (!profile) return;
 
+    const { success, error } = await updateProfilNiveau(
+      profile.id,
+      selectedLevel,
+    );
+
+    if (!success) {
+      Alert.alert("Erreur", error);
+      return;
+    }
+
+    const res = await updateProfileState(profile.id, 3);
+
+    if (!res.success) {
+      Alert.alert("Erreur", res.error);
+      return;
+    }
+
+    setProfile(res.profile);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.leftsubcontainer}>
@@ -67,20 +91,29 @@ export default function Niveaux() {
             gap: 10,
           }}
           renderItem={({ item }) => {
-            const active = selectedLevel === item.title
+            const active = selectedLevel === item.title;
             return (
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => setSelectedLevel(item.title)}
                 accessibilityState={{ selected: active }}
-                style={[
-                  styles.gridItem,
-                  active && styles.chipActive,
-                ]}
+                style={[styles.gridItem, active && styles.chipActive]}
               >
-                <Text style={[styles.itemTextTitle, active && { color: globalColors.title2}]}>{item.title}</Text>
+                <Text
+                  style={[
+                    styles.itemTextTitle,
+                    active && { color: globalColors.title2 },
+                  ]}
+                >
+                  {item.title}
+                </Text>
                 <Text style={styles.itemTextLabel}>{item.label}</Text>
-                <Text style={[styles.itemTextDescription, active && { color : globalColors.red, opacity : 0.5}]}>
+                <Text
+                  style={[
+                    styles.itemTextDescription,
+                    active && { color: globalColors.red, opacity: 0.5 },
+                  ]}
+                >
                   {item.description}
                 </Text>
               </TouchableOpacity>
@@ -106,7 +139,7 @@ export default function Niveaux() {
             },
           ]}
           disabled={!selectedLevel.length}
-          onPress={() => router.replace("/pages/homepage")}
+          onPress={saveNiveau}
         >
           <Text style={styles.buttonText}> Continuer</Text>
           <ArrowRight color="white" />
