@@ -43,6 +43,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         isLoading,
         profile,
         isLoggedIn: !!claims,
+        setProfile
       }}
     >
       {children}
