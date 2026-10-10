@@ -11,6 +11,7 @@ function RootNavigation() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={isLoggedIn}>
+        <Stack.Screen name="startup" />
         <Stack.Screen name="pages" />
         <Stack.Screen name="(writing)" />
       </Stack.Protected>
