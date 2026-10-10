@@ -1,11 +1,16 @@
 import TitleComponent from "@/components/titleComponents";
 import { globalColors, globalStyle } from "@/constants/global";
+import { useAuthContext } from "@/hooks/auth.context";
 import { router } from "expo-router";
 import { Pen, Plus } from "lucide-react-native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Homepage() {
+  const {profile} = useAuthContext()
+
+  console.log(profile);
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
@@ -28,7 +33,7 @@ export default function Homepage() {
         <View style={styles.topcontainer}>
           <View>
             <Text style={[globalStyle.title, { fontSize: 20 }]}>
-              Welcome, Rayane
+              Bon{new Date().getHours() > 19 ? "soir" : "jour"} {profile.username}
             </Text>
             <Text style={globalStyle.subtitle}>
               Un peu de pratique, chaque jour.
