@@ -12,9 +12,12 @@ function RootNavigation() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={isLoggedIn}>
         <Stack.Screen name="pages" />
+        <Stack.Screen name="(writing)" />
       </Stack.Protected>
+
       <Stack.Protected guard={!isLoggedIn}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="auth" />
       </Stack.Protected>
     </Stack>
   );
