@@ -2,10 +2,17 @@ import Entete from "@/components/enteteComponents";
 import { globalColors, globalStyle } from "@/constants/global";
 import { niveaux } from "@/constants/niveaux";
 import { useAuthContext } from "@/hooks/auth.context";
+import {
+  generateSubjects,
+  getProfileThemes,
+  Subject,
+} from "@/services/subjects";
 import { router } from "expo-router";
 import { PenLine, Wand2 } from "lucide-react-native";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   FlatList,
   StyleSheet,
   Text,
@@ -14,38 +21,67 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const themesProposes = [
-  {
-    title: "Un week-end sans écrans",
-    type: "Donner son avis",
-    desc: "Racontez votre expérience et ce qu’elle vous a apporté.",
-    detail:
-      "Vous avez passé un week-end sans téléphone ni ordinateur. Racontez cette expérience, décrivez vos activités et donnez votre avis sur les bienfaits d’une pause numérique.",
-  },
-  {
-    title: "Un projet pour mon quartier",
-    type: "Donner son avis",
-    desc: "Racontez votre expérience et ce qu’elle vous a apporté.",
-    detail: "",
-  },
-  {
-    title: "Une sortie inoubliable",
-    type: "Donner son avis",
-    desc: "Racontez votre expérience et ce qu’elle vous a apporté.",
-    detail: "",
-  },
-];
-
 export default function chooseThemes() {
-    const { profile } = useAuthContext();
-    const niveau = niveaux.filter((n) => n.title === profile.niveau)[0];
+  const { profile } = useAuthContext();
+  const niveau = niveaux.filter((n) => n.title === profile.niveau)[0];
 
-  const [selected, setSelected] = useState({
-    title: "",
-    desc: "",
-    type: "",
-    detail: "",
-  });
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [selected, setSelected] = useState<Subject | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const generate = useCallback(
+    async (exclude: string[] = []) => {
+      if (!profile?.id || !niveau) return;
+      setLoading(true);
+      setSelected(null);
+
+      const t = await getProfileThemes(profile.id);
+      if (!t.success || !t.themes.length) {
+        setLoading(false);
+        Alert.alert("Erreur", t.success ? "Aucun thème choisi." : t.error);
+        return;
+      }
+
+      const res = await generateSubjects({
+        themes: t.themes,
+        niveau: niveau.title,
+        motsMin: niveau.motsMin,
+        motsMax: niveau.motsMax,
+        exclude,
+        count: 3,
+      });
+
+      setLoading(false);
+
+      if (!res.success) {
+        Alert.alert("Erreur", res.error);
+        return;
+      }
+      setSubjects(res.subjects);
+    },
+    [profile?.id, niveau?.title],
+  );
+
+  useEffect(() => {
+    generate();
+  }, [generate]);
+
+  const startWriting = () => {
+    if (!selected || !niveau) return;
+    router.push({
+      pathname: "/(writing)/[id]",
+      params: {
+        id: "new",
+        title: selected.title,
+        type: selected.type,
+        desc: selected.desc,
+        detail: selected.detail,
+        motsMin: String(niveau.motsMin),
+        motsMax: String(niveau.motsMax),
+      },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
@@ -79,34 +115,46 @@ export default function chooseThemes() {
           </View>
 
           <View>
-            <FlatList
-              data={themesProposes}
-              keyExtractor={(theme) => theme.title}
-              renderItem={({ item }) => {
-                const active = selected.title === item.title;
-                return (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => setSelected(item)}
-                    accessibilityState={{ selected: active }}
-                    style={[styles.gridItem, active && styles.chipActive]}
-                  >
-                    <Text
-                      style={[
-                        styles.itemTextTitle,
-                        active && { color: globalColors.title2 },
-                      ]}
+            {loading ? (
+              <View
+                style={{ paddingVertical: 40, alignItems: "center", gap: 10 }}
+              >
+                <ActivityIndicator />
+                <Text style={globalStyle.subtitle}>
+                  Génération de vos sujets...
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={subjects}
+                scrollEnabled={false}
+                keyExtractor={(s) => s.title}
+                renderItem={({ item }) => {
+                  const active = selected?.title === item.title;
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => setSelected(item)}
+                      accessibilityState={{ selected: active }}
+                      style={[styles.gridItem, active && styles.chipActive]}
                     >
-                      {item.title}
-                    </Text>
-                    <Text style={styles.itemTextLabel}>{item.type}</Text>
-                    <Text style={[styles.itemTextDescription]}>
-                      {item.desc}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
+                      <Text
+                        style={[
+                          styles.itemTextTitle,
+                          active && { color: globalColors.title2 },
+                        ]}
+                      >
+                        {item.title}
+                      </Text>
+                      <Text style={styles.itemTextLabel}>{item.type}</Text>
+                      <Text style={styles.itemTextDescription}>
+                        {item.desc}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            )}
           </View>
 
           <View>
@@ -118,41 +166,27 @@ export default function chooseThemes() {
             >
               <Text style={styles.itemTextTitle}>Envie d’autres idées ?</Text>
               <Text style={styles.itemTextLabel}>
-                Découvrez de nouveaux sujets, toujours adaptés à votre niveau
-                B1.
+                Découvrez de nouveaux sujets, toujours adaptés à votre niveau{" "}
+                {niveau?.title}.
               </Text>
-
               <TouchableOpacity
                 style={[
                   styles.button,
+                  styles.buttonRow,
                   {
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    gap: 10,
-                    width: "100%",
                     backgroundColor: "white",
                     borderWidth: 1,
                     borderColor: globalColors.link,
+                    width: "100%"
                   },
+                  loading && { opacity: 0.5 },
                 ]}
-                disabled={!selected.title.length}
-                onPress={() =>
-                  router.replace({
-                    pathname: "/pages/homepage",
-                    params: {
-                      title: selected.title,
-                      detail: selected.detail,
-                      desc: selected.desc,
-                      type: selected.type,
-                    },
-                  })
-                }
+                disabled={loading}
+                onPress={() => generate(subjects.map((s) => s.title))}
               >
                 <Text
                   style={[styles.buttonText, { color: globalColors.title2 }]}
                 >
-                  {" "}
                   Générer des thèmes
                 </Text>
                 <Wand2 color={globalColors.title2} size={20} />
@@ -164,30 +198,13 @@ export default function chooseThemes() {
             <TouchableOpacity
               style={[
                 styles.button,
-                !selected.title.length && { opacity: 0.5 },
-                {
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  gap: 10,
-                  width: "100%",
-                },
+                styles.buttonRow,
+                (!selected || loading) && { opacity: 0.5 },
               ]}
-              disabled={!selected.title.length}
-              onPress={() =>
-                router.push({
-                  pathname: "/(writing)/[id]",
-                  params: {
-                    id: "new",
-                    title: selected.title,
-                    type: selected.type,
-                    desc: selected.desc,
-                    detail: selected.detail
-                  },
-                })
-              }
+              disabled={!selected || loading}
+              onPress={startWriting}
             >
-              <Text style={styles.buttonText}> Écrire sur ce thème </Text>
+              <Text style={styles.buttonText}>Écrire sur ce thème</Text>
               <PenLine color="white" size={20} />
             </TouchableOpacity>
           </View>
@@ -246,8 +263,9 @@ const styles = StyleSheet.create({
     padding: 12.5,
     backgroundColor: "#0003be",
     borderRadius: 30,
-    width: "80%",
+    width: "100%",
     alignItems: "center",
   },
   buttonText: { color: "white", fontWeight: "bold" },
+  buttonRow: { flexDirection: "row", justifyContent: "center", gap: 10 },
 });
