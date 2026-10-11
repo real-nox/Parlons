@@ -182,9 +182,7 @@ export default function chooseThemes() {
                     title: selected.title,
                     type: selected.type,
                     desc: selected.desc,
-                    detail: selected.detail,
-                    motsMax: niveau.motsMax,
-                    motsMin: niveau.motsMin
+                    detail: selected.detail
                   },
                 })
               }

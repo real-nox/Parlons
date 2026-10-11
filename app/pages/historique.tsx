@@ -1,56 +1,58 @@
 import TitleComponent from "@/components/titleComponents";
 import { globalColors, globalStyle } from "@/constants/global";
-import { router } from "expo-router";
+import { useAuthContext } from "@/hooks/auth.context";
+import { getEssays } from "@/services/essays";
+import { router, useFocusEffect } from "expo-router";
 import { ChevronRightIcon } from "lucide-react-native";
+import { useCallback, useState } from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const textes = [
-  {
-    title: "Mon voyage idéal",
-    date: "7 oct. 2026",
-    niveau: "B1",
-    nbrMots: "250",
-  },
-  {
-    title: "Mon voyage idéal",
-    date: "7 oct. 2026",
-    niveau: "B1",
-    nbrMots: "250",
-  },
-  {
-    title: "Mon voyage idéal",
-    date: "7 oct. 2026",
-    niveau: "B1",
-    nbrMots: "250",
-  },
-  {
-    title: "Mon voyage idéal",
-    date: "7 oct. 2026",
-    niveau: "B1",
-    nbrMots: "250",
-  },
-  {
-    title: "Le télétravail au quotidien",
-    date: "7 oct. 2026",
-    niveau: "B1",
-    nbrMots: "250",
-  },
-  {
-    title: "Une rencontre marquante",
-    date: "7 oct. 2026",
-    niveau: "B1",
-    nbrMots: "250",
-  },
-];
+type Essay = {
+  id: string;
+  theme: string;
+  level: string;
+  word_count: number;
+  status: string;
+  created_at: string;
+};
 
 export default function Historique() {
+  const { profile } = useAuthContext();
+  const [essays, setEssays] = useState<Essay[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!profile?.id) return;
+      let active = true;
+
+      (async () => {
+        const res = await getEssays(profile.id);
+        if (active && res.success) setEssays(res.essays!);
+        if (active) setLoading(false);
+      })();
+
+      return () => {
+        active = false;
+      };
+    }, [profile?.id]),
+  );
+
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
@@ -82,34 +84,41 @@ export default function Historique() {
             </Text>
           </View>
 
-          <FlatList
-            style={{ flex: 1 }}
-            contentContainerStyle={{ gap: 10, paddingBottom: 20 }}
-            data={textes}
-            keyExtractor={(item) => item.title}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.Box}
-                onPress={() => router.replace("/pages/historique")}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
+          {loading ? (
+            <ActivityIndicator style={{ marginTop: 20 }} />
+          ) : (
+            <FlatList
+              style={{ flex: 1 }}
+              contentContainerStyle={{ gap: 10, paddingBottom: 20 }}
+              data={essays}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.Box}
+                  onPress={() => router.push(`/(writing)/${item.id}`)}
                 >
-                  <Text>{item.title}</Text>
-                  <ChevronRightIcon color={globalColors.subtitle} width={20} />
-                </View>
-                <Text>
-                  {item.date} {item.niveau}
-                </Text>
-                <Text>{item.nbrMots}</Text>
-              </TouchableOpacity>
-            )}
-          />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text>{item.theme}</Text>
+                    <ChevronRightIcon
+                      color={globalColors.subtitle}
+                      width={20}
+                    />
+                  </View>
+                  <Text>
+                    {formatDate(item.created_at)} . {item.level}
+                  </Text>
+                  <Text>{item.word_count}</Text>
+                </TouchableOpacity>
+              )}
+            />
+          )}
         </View>
       </View>
     </SafeAreaView>

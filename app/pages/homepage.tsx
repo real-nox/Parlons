@@ -2,14 +2,60 @@ import TitleComponent from "@/components/titleComponents";
 import { globalColors, globalStyle } from "@/constants/global";
 import { niveaux } from "@/constants/niveaux";
 import { useAuthContext } from "@/hooks/auth.context";
-import { router } from "expo-router";
-import { Pen, Plus } from "lucide-react-native";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getEssays } from "@/services/essays";
+import { router, useFocusEffect } from "expo-router";
+import { ChevronRightIcon, Pen, Plus } from "lucide-react-native";
+import { useCallback, useState } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+type Essay = {
+  id: string;
+  theme: string;
+  level: string;
+  word_count: number;
+  status: string;
+  created_at: string;
+};
 
 export default function Homepage() {
   const { profile } = useAuthContext();
-  const niveau = niveaux.filter((n) => n.title === profile.niveau)[0];
+  const niveau = niveaux.find((n) => n.title === profile?.niveau);
+
+  const [essays, setEssays] = useState<Essay[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!profile?.id) return;
+      let active = true;
+
+      (async () => {
+        const res = await getEssays(profile.id, 3);
+        console.log(res);
+
+        if (active && res.success) setEssays(res.essays!);
+        if (active) setLoading(false);
+      })();
+
+      return () => {
+        active = false;
+      };
+    }, [profile?.id]),
+  );
+
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,8 +112,8 @@ export default function Homepage() {
             <View>
               <Text>À vous d’écrire !</Text>
               <Text style={[globalStyle.subtitle, { fontSize: 10 }]}>
-                Un thème à votre niveau, {niveau.motsMin} - {niveau.motsMax}{" "}
-                mots.
+                Un thème à votre niveau,{" "}
+                {niveau ? `${niveau.motsMin} - ${niveau.motsMax}` : "..."} mots.
               </Text>
             </View>
           </View>
@@ -83,7 +129,7 @@ export default function Homepage() {
                   width: "100%",
                 },
               ]}
-              onPress={() => router.replace("/(writing)/chooseThemes")}
+              onPress={() => router.push("/(writing)/chooseThemes")}
             >
               <Text style={styles.buttonText}> Nouvelle production</Text>
               <Plus color="white" />
@@ -103,16 +149,48 @@ export default function Homepage() {
             <Text style={[globalStyle.title, { fontSize: 15 }]}>
               Mes productions
             </Text>
-            <TouchableOpacity
-              onPress={() => router.replace("/pages/historique")}
-            >
+            <TouchableOpacity onPress={() => router.push("/pages/historique")}>
               <Text style={{ color: globalColors.link, fontSize: 15 }}>
                 Tout voir
               </Text>
             </TouchableOpacity>
           </View>
 
-          <View></View>
+          <View>
+            {loading ? (
+              <ActivityIndicator style={{ marginTop: 20 }} />
+            ) : (
+              <View style={{ gap: 10, paddingTop: 10 }}>
+                {essays.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={styles.Box}
+                    onPress={() => router.push(`/(writing)/${item.id}`)}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text>{item.theme}</Text>
+                      <ChevronRightIcon
+                        color={globalColors.subtitle}
+                        width={20}
+                      />
+                    </View>
+
+                    <Text>
+                      {formatDate(item.created_at)} . {item.level}
+                    </Text>
+
+                    <Text>{item.word_count}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -155,6 +233,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: "80%",
     alignItems: "center",
+  },
+  Box: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: "rgb(255, 255, 255)",
+    borderRadius: 15,
+    borderColor: "#d1d1d157",
+    borderWidth: 1,
   },
   buttonText: { color: "white", fontWeight: "bold" },
 });

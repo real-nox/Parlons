@@ -1,9 +1,14 @@
 import Entete from "@/components/enteteComponents";
 import { globalColors, globalStyle } from "@/constants/global";
-import { router } from "expo-router";
+import { niveaux } from "@/constants/niveaux";
+import { useAuthContext } from "@/hooks/auth.context";
+import { getEssay, saveEssay } from "@/services/essays";
+import { router, useLocalSearchParams } from "expo-router";
 import { AlignLeft, Save } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -17,16 +22,88 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProductionEcrite() {
-  const [texte, setTexte] = useState<string>("");
+  const { profile } = useAuthContext();
+  const niveau = niveaux.filter(n => n.title === profile.niveau)[0]
+  const { id, title, detail, desc, type } =
+    useLocalSearchParams<{
+      id: string;
+      title: string;
+      detail: string;
+      desc: string;
+      type: string;
+    }>();
+
+  const isNew = id === "new";
+
+  const [essayId, setEssayId] = useState<string | undefined>(
+    isNew ? undefined : id,
+  );
+  const [subject, setSubject] = useState({
+    title: title ?? "",
+    type: type ?? "",
+    desc: desc ?? "",
+    detail: detail ?? "",
+  });
+  const [texte, setTexte] = useState("");
+  const [loading, setLoading] = useState(!isNew);
+  const [saving, setSaving] = useState(false);
   const insets = useSafeAreaInsets();
 
+  useEffect(() => {
+    if (isNew) return;
+    (async () => {
+      const res = await getEssay(id);
+
+      if (res.success) {
+        setSubject(res.essay?.subject);
+        setTexte(res.essay?.content);
+
+        
+        
+      } else {
+        Alert.alert("Erreur", res.error);
+      }
+      setLoading(false);
+    })();
+  }, [id]);
+
+  console.log(subject);
   const nbMots = useMemo(() => {
+    console.log(texte);
+
     const t = texte.trim();
     return t ? t.split(/\s+/).length : 0;
   }, [texte]);
 
-  const objectifAtteint = nbMots >= 120 && nbMots <= 160;
+  const objectifAtteint =
+    nbMots >= Number(niveau.motsMin) && nbMots <= Number(niveau.motsMax);
 
+  const submit = async () => {
+    if (!profile || saving) return;
+    setSaving(true);
+
+    const res = await saveEssay(profile.id, {
+      id: essayId,
+      theme: subject.title,
+      level: profile.niveau,
+      subject,
+      word_count: String(nbMots),
+      content: texte,
+      status: "submitted",
+    });
+
+    setSaving(false);
+
+    if (!res.success) {
+      Alert.alert("Erreur", res.error);
+      return;
+    }
+
+    setEssayId(res.essay.id);
+    router.replace("/pages/homepage");
+  };
+
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -50,21 +127,21 @@ export default function ProductionEcrite() {
                   fontSize: 10,
                 }}
               >
-                DONNER SON AVIS
+                {(type ? type : subject.type).toUpperCase()}
               </Text>
               <Text
                 style={[globalStyle.title, { fontSize: 18, paddingBottom: 5 }]}
               >
-                Un week-end sans écrans
+                {title ? title : subject.title}
               </Text>
               <Text style={[globalStyle.subtitle, { fontSize: 12 }]}>
-                Vous avez passé un week-end sans téléphone ni ordinateur.
-                Racontez cette expérience, décrivez vos activités et donnez
-                votre avis sur les bienfaits d’une pause numérique.
+                {detail ? detail : subject.detail}
               </Text>
               <View style={[styles.row, { paddingTop: 5 }]}>
                 <AlignLeft size={12} fontWeight={"bold"} />
-                <Text style={{ fontSize: 12 }}>120 à 160 mots</Text>
+                <Text style={{ fontSize: 12 }}>
+                  {niveau.motsMin } à {niveau.motsMax} mots
+                </Text>
               </View>
             </View>
 
@@ -84,14 +161,14 @@ export default function ProductionEcrite() {
                     globalStyle.subtitle,
                     {
                       fontSize: 12,
-                      color: objectifAtteint ? "green" : globalColors.title2,
+                      color: objectifAtteint ? "green" : globalColors.red,
                     },
                   ]}
                 >
                   {nbMots} mots
                 </Text>
                 <Text style={[globalStyle.subtitle, { fontSize: 12 }]}>
-                  Objectif: 120-160
+                  Objectif: {niveau.motsMin}-{niveau.motsMax}
                 </Text>
               </View>
             </View>
@@ -107,10 +184,17 @@ export default function ProductionEcrite() {
                     gap: 10,
                     width: "100%",
                   },
+                  !texte.length && {
+                    opacity: 0.5,
+                  },
                 ]}
-                onPress={() => router.replace("/pages/homepage")}
+                disabled={!texte.length}
+                onPress={submit}
               >
-                <Text style={styles.buttonText}> Sauvegarder votre production écrite </Text>
+                <Text style={styles.buttonText}>
+                  {" "}
+                  Sauvegarder votre production écrite{" "}
+                </Text>
                 <Save color="white" size={20} />
               </TouchableOpacity>
             </View>
