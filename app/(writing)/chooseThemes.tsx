@@ -1,7 +1,9 @@
 import Entete from "@/components/enteteComponents";
 import { globalColors, globalStyle } from "@/constants/global";
+import { niveaux } from "@/constants/niveaux";
+import { useAuthContext } from "@/hooks/auth.context";
 import { router } from "expo-router";
-import { ArrowRight, PenLine, Wand2 } from "lucide-react-native";
+import { PenLine, Wand2 } from "lucide-react-native";
 import { useState } from "react";
 import {
   FlatList,
@@ -17,21 +19,33 @@ const themesProposes = [
     title: "Un week-end sans écrans",
     type: "Donner son avis",
     desc: "Racontez votre expérience et ce qu’elle vous a apporté.",
+    detail:
+      "Vous avez passé un week-end sans téléphone ni ordinateur. Racontez cette expérience, décrivez vos activités et donnez votre avis sur les bienfaits d’une pause numérique.",
   },
   {
     title: "Un projet pour mon quartier",
     type: "Donner son avis",
     desc: "Racontez votre expérience et ce qu’elle vous a apporté.",
+    detail: "",
   },
   {
     title: "Une sortie inoubliable",
     type: "Donner son avis",
     desc: "Racontez votre expérience et ce qu’elle vous a apporté.",
+    detail: "",
   },
 ];
 
 export default function chooseThemes() {
-  const [selected, setSelected] = useState<string>("");
+    const { profile } = useAuthContext();
+    const niveau = niveaux.filter((n) => n.title === profile.niveau)[0];
+
+  const [selected, setSelected] = useState({
+    title: "",
+    desc: "",
+    type: "",
+    detail: "",
+  });
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
@@ -60,7 +74,7 @@ export default function chooseThemes() {
               Thèmes proposés
             </Text>
             <Text style={[globalStyle.subtitle, { paddingBottom: 5 }]}>
-              120-160 mots
+              {niveau.motsMin} - {niveau.motsMax} mots
             </Text>
           </View>
 
@@ -69,11 +83,11 @@ export default function chooseThemes() {
               data={themesProposes}
               keyExtractor={(theme) => theme.title}
               renderItem={({ item }) => {
-                const active = selected === item.title;
+                const active = selected.title === item.title;
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => setSelected(item.title)}
+                    onPress={() => setSelected(item)}
                     accessibilityState={{ selected: active }}
                     style={[styles.gridItem, active && styles.chipActive]}
                   >
@@ -86,11 +100,7 @@ export default function chooseThemes() {
                       {item.title}
                     </Text>
                     <Text style={styles.itemTextLabel}>{item.type}</Text>
-                    <Text
-                      style={[
-                        styles.itemTextDescription,
-                      ]}
-                    >
+                    <Text style={[styles.itemTextDescription]}>
                       {item.desc}
                     </Text>
                   </TouchableOpacity>
@@ -123,37 +133,65 @@ export default function chooseThemes() {
                     width: "100%",
                     backgroundColor: "white",
                     borderWidth: 1,
-                    borderColor: globalColors.link
+                    borderColor: globalColors.link,
                   },
                 ]}
-                disabled={!selected.length}
-                onPress={() => router.replace("/pages/homepage")}
+                disabled={!selected.title.length}
+                onPress={() =>
+                  router.replace({
+                    pathname: "/pages/homepage",
+                    params: {
+                      title: selected.title,
+                      detail: selected.detail,
+                      desc: selected.desc,
+                      type: selected.type,
+                    },
+                  })
+                }
               >
-                <Text style={[styles.buttonText, { color: globalColors.title2 }]}> Générer des thèmes</Text>
-                <Wand2 color={globalColors.title2} size={20}/>
+                <Text
+                  style={[styles.buttonText, { color: globalColors.title2 }]}
+                >
+                  {" "}
+                  Générer des thèmes
+                </Text>
+                <Wand2 color={globalColors.title2} size={20} />
               </TouchableOpacity>
             </View>
           </View>
 
           <View>
             <TouchableOpacity
-                style={[
-                  styles.button,
-                  !selected.length && { opacity: 0.5 },
-                  {
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    gap: 10,
-                    width: "100%",
+              style={[
+                styles.button,
+                !selected.title.length && { opacity: 0.5 },
+                {
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 10,
+                  width: "100%",
+                },
+              ]}
+              disabled={!selected.title.length}
+              onPress={() =>
+                router.push({
+                  pathname: "/(writing)/[id]",
+                  params: {
+                    id: "new",
+                    title: selected.title,
+                    type: selected.type,
+                    desc: selected.desc,
+                    detail: selected.detail,
+                    motsMax: niveau.motsMax,
+                    motsMin: niveau.motsMin
                   },
-                ]}
-                disabled={!selected.length}
-                onPress={() => router.replace("/(writing)/[id]")}
-              >
-                <Text style={styles.buttonText}> Écrire sur ce thème </Text>
-                <PenLine color="white" size={20}/>
-              </TouchableOpacity>
+                })
+              }
+            >
+              <Text style={styles.buttonText}> Écrire sur ce thème </Text>
+              <PenLine color="white" size={20} />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
