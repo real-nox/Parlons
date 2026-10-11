@@ -4,7 +4,7 @@
     "slug": "Parlons",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/ParlonsLogo.png",
+    "icon": "./assets/Logo.png",
     "scheme": "parlons",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -13,23 +13,23 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#004a80",
-        "foregroundImage": "./assets/ParlonsLogo.png",
-        "backgroundImage": "./assets/ParlonsLogo.png",
-        "monochromeImage": "./assets/ParlonsLogo.png"
+        "foregroundImage": "./assets/Logo.png",
+        "backgroundImage": "./assets/Logo.png",
+        "monochromeImage": "./assets/Logo.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.ranox.parlons"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/ParlonsLogo.png"
+      "favicon": "./assets/Logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/Logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#004a80",
