@@ -1,7 +1,8 @@
 import TitleComponent from "@/components/titleComponents";
-import { globalStyle } from "@/constants/global";
+import { globalColors, globalStyle } from "@/constants/global";
+import { signOut } from "@/services/auth";
 import LottieView from "lottie-react-native";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profil() {
@@ -20,6 +21,12 @@ export default function Profil() {
           <Text style={globalStyle.subtitle}>
             Section en cours de construction, merci pour votre comprehension!
           </Text>
+        </View>
+
+        <View>
+          <TouchableOpacity onPress={signOut}>
+            <Text style={{color: globalColors.red}}>Se déconnecter</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={{ alignItems: "center", justifyContent: "center", height: "60%"}}>
