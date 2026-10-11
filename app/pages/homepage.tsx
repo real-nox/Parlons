@@ -61,18 +61,7 @@ export default function Homepage() {
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.leftsubcontainer}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "80%",
-            }}
-          >
-            <View style={{ width: "100%" }}>
-              <TitleComponent size="medium" />
-            </View>
-          </View>
+          <TitleComponent size="medium" />
         </View>
 
         {/* Top items */}
@@ -174,18 +163,19 @@ export default function Homepage() {
                         alignItems: "center",
                       }}
                     >
-                      <Text>{item.theme}</Text>
+                      <Text style={{fontSize: 16, paddingBottom: 4, fontWeight: "bold"}}>{item.theme}</Text>
                       <ChevronRightIcon
                         color={globalColors.subtitle}
                         width={20}
                       />
                     </View>
 
-                    <Text>
+                    <Text style={globalStyle.subtitle}>
                       {formatDate(item.created_at)} . {item.level}
                     </Text>
-
-                    <Text>{item.word_count}</Text>
+                    <Text style={globalStyle.subtitle}>
+                      {item.word_count} mots
+                    </Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -239,7 +229,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: "rgb(255, 255, 255)",
     borderRadius: 15,
-    borderColor: "#d1d1d157",
+    borderColor: "#5b5b5b4c",
     borderWidth: 1,
   },
   buttonText: { color: "white", fontWeight: "bold" },
