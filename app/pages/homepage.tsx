@@ -1,5 +1,6 @@
 import TitleComponent from "@/components/titleComponents";
 import { globalColors, globalStyle } from "@/constants/global";
+import { niveaux } from "@/constants/niveaux";
 import { useAuthContext } from "@/hooks/auth.context";
 import { router } from "expo-router";
 import { Pen, Plus } from "lucide-react-native";
@@ -7,10 +8,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Homepage() {
-  const {profile} = useAuthContext()
+  const { profile } = useAuthContext();
+  const niveau = niveaux.filter((n) => n.title === profile.niveau)[0];
 
-  console.log(profile);
-  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
@@ -33,7 +33,8 @@ export default function Homepage() {
         <View style={styles.topcontainer}>
           <View>
             <Text style={[globalStyle.title, { fontSize: 20 }]}>
-              Bon{new Date().getHours() > 19 ? "soir" : "jour"} {profile.username}
+              Bon{new Date().getHours() > 19 ? "soir" : "jour"}{" "}
+              {profile.username}
             </Text>
             <Text style={globalStyle.subtitle}>
               Un peu de pratique, chaque jour.
@@ -65,7 +66,8 @@ export default function Homepage() {
             <View>
               <Text>À vous d’écrire !</Text>
               <Text style={[globalStyle.subtitle, { fontSize: 10 }]}>
-                Un thème à votre niveau, 120-160 mots.
+                Un thème à votre niveau, {niveau.motsMin} - {niveau.motsMax}{" "}
+                mots.
               </Text>
             </View>
           </View>
@@ -98,11 +100,15 @@ export default function Homepage() {
               justifyContent: "space-between",
             }}
           >
-            <Text style={[globalStyle.title, { fontSize: 15}]}>Mes productions</Text>
+            <Text style={[globalStyle.title, { fontSize: 15 }]}>
+              Mes productions
+            </Text>
             <TouchableOpacity
               onPress={() => router.replace("/pages/historique")}
             >
-              <Text style={{ color: globalColors.link, fontSize: 15 }}>Tout voir</Text>
+              <Text style={{ color: globalColors.link, fontSize: 15 }}>
+                Tout voir
+              </Text>
             </TouchableOpacity>
           </View>
 
