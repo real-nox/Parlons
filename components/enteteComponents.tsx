@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
-export default function Entete({ title }: { title: string }) {
+export default function Entete({ title, niveau }: { title: string, niveau: string }) {
   return (
     <View
       style={{
@@ -36,7 +36,7 @@ export default function Entete({ title }: { title: string }) {
       </Pressable>
 
       <View>
-        <Text>NIVEAU B2</Text>
+        <Text>NIVEAU {niveau}</Text>
       </View>
     </View>
   );
