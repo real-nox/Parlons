@@ -72,3 +72,15 @@ export async function getEssay(id: string) {
     return { success: false as const, error: err.message };
   }
 }
+
+export async function getStreak() {
+    try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    const { data, error } = await supabase.rpc("get_streak", { tz });
+
+    if (error) return { success: false as const, error: error.message };
+    return { success: true as const, streak: (data ?? 0) as number };
+  } catch (err: any) {
+    return { success: false as const, error: err.message };
+  }
+}
