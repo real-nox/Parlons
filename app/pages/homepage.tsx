@@ -4,14 +4,14 @@ import { niveaux } from "@/constants/niveaux";
 import { useAuthContext } from "@/hooks/auth.context";
 import { getEssays } from "@/services/essays";
 import { router, useFocusEffect } from "expo-router";
-import { ChevronRightIcon, Pen, Plus } from "lucide-react-native";
+import { ChevronRightIcon, Flame, Pen, Plus } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -25,7 +25,7 @@ type Essay = {
 };
 
 export default function Homepage() {
-  const { profile } = useAuthContext();
+  const { profile, streak, refreshStreak } = useAuthContext();
   const niveau = niveaux.find((n) => n.title === profile?.niveau);
 
   const [essays, setEssays] = useState<Essay[]>([]);
@@ -35,10 +35,10 @@ export default function Homepage() {
     useCallback(() => {
       if (!profile?.id) return;
       let active = true;
+      refreshStreak();
 
       (async () => {
         const res = await getEssays(profile.id, 3);
-        console.log(res);
 
         if (active && res.success) setEssays(res.essays!);
         if (active) setLoading(false);
@@ -76,7 +76,17 @@ export default function Homepage() {
             </Text>
           </View>
           <View>
-            <Text>12 jours </Text>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
+            >
+              <Flame
+                size={20}
+                color={streak > 0 ? globalColors.red : globalColors.subtitle}
+              />
+              <Text style={{ fontWeight: "bold" }}>
+                {streak} jour{streak > 1 ? "s" : ""}
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -163,7 +173,15 @@ export default function Homepage() {
                         alignItems: "center",
                       }}
                     >
-                      <Text style={{fontSize: 16, paddingBottom: 4, fontWeight: "bold"}}>{item.theme}</Text>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          paddingBottom: 4,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {item.theme}
+                      </Text>
                       <ChevronRightIcon
                         color={globalColors.subtitle}
                         width={20}
