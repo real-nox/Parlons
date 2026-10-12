@@ -85,7 +85,7 @@ export default function chooseThemes() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
-        <Entete title="Production écrite" />
+        <Entete title="Production écrite" niveau={niveau.title} />
 
         <View style={styles.topcontainer}>
           <View>
