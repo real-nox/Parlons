@@ -1,3 +1,4 @@
+import { globalColors } from "@/constants/global";
 import { router } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
@@ -35,8 +36,15 @@ export default function Entete({ title, niveau }: { title: string, niveau: strin
         </Text>
       </Pressable>
 
-      <View>
-        <Text>NIVEAU {niveau}</Text>
+      <View style={{
+        padding: 5,
+        borderWidth: 1,
+        borderColor: globalColors.title2,
+        borderRadius: 15
+      }}>
+        <Text style={{
+          color: globalColors.red,
+        }}>NIVEAU {niveau}</Text>
       </View>
     </View>
   );
