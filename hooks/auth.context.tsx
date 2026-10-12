@@ -6,6 +6,8 @@ export type AuthData = {
   isLoading: boolean;
   isLoggedIn: boolean;
   setProfile: (profile: any) => void;
+  streak: number;
+  refreshStreak: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthData>({
@@ -14,6 +16,8 @@ export const AuthContext = createContext<AuthData>({
   isLoading: true,
   isLoggedIn: false,
   setProfile: () => {},
+  streak: 0,
+  refreshStreak: async () => {},
 });
 
 export const useAuthContext = () => useContext(AuthContext);

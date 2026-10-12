@@ -1,12 +1,18 @@
 import { AuthContext } from '@/hooks/auth.context'
 import { supabase } from '@/lib/supabase'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { getStreak } from '@/services/essays'
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [claims, setClaims] = useState<Record<string, any> | null>(null)
   const [profile, setProfile] = useState<any>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [streak, setStreak] = useState(0)
 
+  const refreshStreak = useCallback(async () => {
+    const res = await getStreak()
+    if (res.success) setStreak(res.streak)
+  }, [])
   useEffect(() => {
     const {
       data: { subscription },
@@ -27,9 +33,13 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         } else {
           setClaims(null)
           setProfile(null)
+          setStreak(0)
+          setIsLoading(false)
+          return
         }
 
         setIsLoading(false)
+        refreshStreak()
       }, 0)
     })
 
@@ -43,7 +53,9 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         isLoading,
         profile,
         isLoggedIn: !!claims,
-        setProfile
+        setProfile,
+        streak,
+        refreshStreak
       }}
     >
       {children}
