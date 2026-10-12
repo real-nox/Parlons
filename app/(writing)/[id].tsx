@@ -22,7 +22,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProductionEcrite() {
-  const { profile } = useAuthContext();
+  const { profile, refreshStreak } = useAuthContext();
   const niveau = niveaux.filter(n => n.title === profile.niveau)[0]
   const { id, title, detail, desc, type } =
     useLocalSearchParams<{
@@ -67,10 +67,7 @@ export default function ProductionEcrite() {
     })();
   }, [id]);
 
-  console.log(subject);
   const nbMots = useMemo(() => {
-    console.log(texte);
-
     const t = texte.trim();
     return t ? t.split(/\s+/).length : 0;
   }, [texte]);
@@ -100,6 +97,7 @@ export default function ProductionEcrite() {
     }
 
     setEssayId(res.essay.id);
+    await refreshStreak()
     router.replace("/pages/homepage");
   };
 
@@ -112,7 +110,7 @@ export default function ProductionEcrite() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={[styles.container, { paddingTop: insets.top + 20 }]}>
           <View style={styles.wrapper}>
-            <Entete title="Votre texte" />
+            <Entete title="Votre texte" niveau={niveau.title} />
 
             <View
               style={{
