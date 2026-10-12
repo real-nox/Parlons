@@ -60,6 +60,7 @@ export default function LoginScreen() {
             placeholder="Adresse e-mail"
             keyboardType="email-address"
             autoCapitalize="none"
+            placeholderTextColor="#5f5f5f"
             autoCorrect={false}
             textContentType="emailAddress"
             autoComplete="email"
@@ -72,8 +73,9 @@ export default function LoginScreen() {
             style={[styles.input, { marginBottom: 5 }]}
             placeholder="Mot de passe"
             secureTextEntry
+            placeholderTextColor="#5f5f5f"
             autoCapitalize="none"
-            textContentType="newPassword"
+            textContentType="password"
             value={pwd}
             onChangeText={setPwd}
           />
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(173, 173, 173, 0.21)",
     paddingLeft: 15,
     marginBottom: 15,
+    color: "#000000",
   },
   containerLogin: {
     paddingTop: 30,

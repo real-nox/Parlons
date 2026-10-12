@@ -69,7 +69,7 @@ export default function RegisterScreen() {
           <TextInput
             style={styles.input}
             placeholder="Rayane Sirri"
-            onChangeText={(nom) => setNom(nom)}
+placeholderTextColor="#5f5f5f"            onChangeText={(nom) => setNom(nom)}
           />
 
           <Text style={styles.label}>Adresse e-mail</Text>
@@ -79,6 +79,7 @@ export default function RegisterScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
+            placeholderTextColor="#5f5f5f"
             textContentType="emailAddress"
             autoComplete="email"
             value={email}
@@ -91,7 +92,8 @@ export default function RegisterScreen() {
             placeholder="Mot de passe"
             secureTextEntry
             autoCapitalize="none"
-            textContentType="newPassword"
+            placeholderTextColor="#5f5f5f"
+            textContentType="password"
             value={pwd}
             onChangeText={setPwd}
           />
@@ -193,6 +195,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(173, 173, 173, 0.21)",
     paddingLeft: 15,
     marginBottom: 15,
+    color: "#000000",
   },
   containerRegister: {
     paddingTop: 30,
