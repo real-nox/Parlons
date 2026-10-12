@@ -1,3 +1,4 @@
+import ErrorComponents from "@/components/errorComponents";
 import TitleComponent from "@/components/titleComponents";
 import { globalColors, globalStyle } from "@/constants/global";
 import { signUp } from "@/services/auth";
@@ -5,7 +6,6 @@ import { router } from "expo-router";
 import { ArrowRight } from "lucide-react-native";
 import { useState } from "react";
 import {
-  Alert,
   Keyboard,
   StyleSheet,
   Text,
@@ -35,119 +35,131 @@ export default function RegisterScreen() {
   const valid = nom.length > 5 && emailValid && rules.every((r) => r.valid);
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const creerCompte = async () => {
     if (!valid || loading) return;
     setLoading(true);
+    setError(null);
     const result = await signUp(email.trim(), pwd, nom.trim());
     setLoading(false);
 
     if (!result.success) {
-      Alert.alert(
-        "Inscription impossible",
-        result.error ?? "Une erreur est survenue.",
-      );
+      setError("Une erreur est survenue.");
     }
 
-    router.replace({ pathname: "/auth/login", params: { email: email.trim() } });
+    router.replace({
+      pathname: "/auth/login",
+      params: { email: email.trim() },
+    });
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={[styles.container, { paddingTop: insets.top + 20 }]}>
-        <View style={styles.leftsubcontainer}>
-          <TitleComponent size="small" />
-          <Text style={[globalStyle.title, { fontSize: 22.5 }]}>
-            Créez votre compte
-          </Text>
-          <Text style={globalStyle.subtitle}>
-            Quelques informations, et vos révisions peuvent commencer.
-          </Text>
-        </View>
-        <View style={styles.containerRegister}>
-          <Text style={styles.label}>Nom complet</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Rayane Sirri"
-placeholderTextColor="#5f5f5f"            onChangeText={(nom) => setNom(nom)}
-          />
-
-          <Text style={styles.label}>Adresse e-mail</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Adresse e-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            placeholderTextColor="#5f5f5f"
-            textContentType="emailAddress"
-            autoComplete="email"
-            value={email}
-            onChangeText={setEmail}
-          />
-
-          <Text style={styles.label}>Mot de passe</Text>
-          <TextInput
-            style={[styles.input, { marginBottom: 5 }]}
-            placeholder="Mot de passe"
-            secureTextEntry
-            autoCapitalize="none"
-            placeholderTextColor="#5f5f5f"
-            textContentType="password"
-            value={pwd}
-            onChangeText={setPwd}
-          />
-
-          <View style={styles.rules}>
-            {rules.map((rule) => (
-              <Text
-                key={rule.label}
-                style={[styles.rule, rule.valid && styles.ruleValid]}
-              >
-                {rule.valid ? "✓" : "•"} {rule.label}
-              </Text>
-            ))}
-          </View>
-
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 10,
-                width: "86%",
-                marginBottom: 20,
-              },
-              (!valid || loading) && { opacity: 0.5 },
-            ]}
-            disabled={!valid || loading}
-            onPress={creerCompte}
-          >
-            <Text style={styles.buttonText}>
-              {loading ? "Création..." : "Créer mon compte"}
+    <>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={[styles.container, { paddingTop: insets.top + 20 }]}>
+          <View style={styles.leftsubcontainer}>
+            <TitleComponent size="small" />
+            <Text style={[globalStyle.title, { fontSize: 22.5 }]}>
+              Créez votre compte
             </Text>
-            <ArrowRight color="white" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.subcontainer}>
-          <View
-            style={{
-              alignItems: "center",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Text>Vous avez déjà un compte ? </Text>
+            <Text style={globalStyle.subtitle}>
+              Quelques informations, et vos révisions peuvent commencer.
+            </Text>
+          </View>
+          <View style={styles.containerRegister}>
+            <Text style={styles.label}>Nom complet</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Rayane Sirri"
+              placeholderTextColor="#5f5f5f"
+              onChangeText={(nom) => setNom(nom)}
+            />
 
-            <TouchableOpacity onPress={() => router.replace("./login")}>
-              <Text style={{ color: globalColors.link }}> Se connecter</Text>
+            <Text style={styles.label}>Adresse e-mail</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Adresse e-mail"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              placeholderTextColor="#5f5f5f"
+              textContentType="emailAddress"
+              autoComplete="email"
+              value={email}
+              onChangeText={setEmail}
+            />
+
+            <Text style={styles.label}>Mot de passe</Text>
+            <TextInput
+              style={[styles.input, { marginBottom: 5 }]}
+              placeholder="Mot de passe"
+              secureTextEntry
+              autoCapitalize="none"
+              placeholderTextColor="#5f5f5f"
+              textContentType="password"
+              value={pwd}
+              onChangeText={setPwd}
+            />
+
+            <View style={styles.rules}>
+              {rules.map((rule) => (
+                <Text
+                  key={rule.label}
+                  style={[styles.rule, rule.valid && styles.ruleValid]}
+                >
+                  {rule.valid ? "✓" : "•"} {rule.label}
+                </Text>
+              ))}
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 10,
+                  width: "86%",
+                  marginBottom: 20,
+                },
+                (!valid || loading) && { opacity: 0.5 },
+              ]}
+              disabled={!valid || loading}
+              onPress={creerCompte}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? "Création..." : "Créer mon compte"}
+              </Text>
+              <ArrowRight color="white" />
             </TouchableOpacity>
           </View>
+          <View style={styles.subcontainer}>
+            <View
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "center",
+              }}
+            >
+              <Text>Vous avez déjà un compte ? </Text>
+
+              <TouchableOpacity onPress={() => router.replace("./login")}>
+                <Text style={{ color: globalColors.link }}> Se connecter</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+      {error && (
+        <ErrorComponents
+          title="Connexion impossible"
+          erreur={error}
+          onClose={() => setError(null)}
+        />
+      )}
+    </>
   );
 }
 
