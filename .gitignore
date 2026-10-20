@@ -44,3 +44,5 @@ app-example
 
 notes.txt
 .env
+
+*.apk
