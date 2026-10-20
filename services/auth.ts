@@ -58,3 +58,17 @@ export async function signOut() {
     return { success: false, error: err.message };
   }
 }
+
+export async function getEmail(userId: string) {
+  try {
+    const { data, error } = await supabase.rpc("get_user_email_by_id", {
+      p_user_id: userId,
+    });
+
+    if (error) return { success: false, error };
+    return { success: true, email: data };
+  } catch (err: any) {
+    console.error(err);
+    return { success: false, error: err.message };
+  }
+}

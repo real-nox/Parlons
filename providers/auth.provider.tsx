@@ -1,50 +1,57 @@
-import { AuthContext } from '@/hooks/auth.context'
-import { supabase } from '@/lib/supabase'
-import { getStreak } from '@/services/essays'
-import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { AuthContext } from "@/hooks/auth.context";
+import { supabase } from "@/lib/supabase";
+import { getEmail } from "@/services/auth";
+import { getStreak } from "@/services/essays";
+import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 
 export default function AuthProvider({ children }: PropsWithChildren) {
-  const [claims, setClaims] = useState<Record<string, any> | null>(null)
-  const [profile, setProfile] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [streak, setStreak] = useState(0)
+  const [claims, setClaims] = useState<Record<string, any> | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [streak, setStreak] = useState(0);
+  const [email, setEmail] = useState("");
 
   const refreshStreak = useCallback(async () => {
-    const res = await getStreak()
-    if (res.success) setStreak(res.streak)
-  }, [])
+    const res = await getStreak();
+    if (res.success) setStreak(res.streak);
+  }, []);
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event)
+      console.log("Auth state changed:", event);
 
       setTimeout(async () => {
         if (session) {
-          setClaims({ sub: session.user.id })
+          setClaims({ sub: session.user.id });
 
           const { data } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single()
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
 
-          setProfile(data ?? null)
+          setProfile(data ?? null);
+          if (data) {
+            const userEmail: string = (await getEmail(session.user.id)).email;
+            setEmail(userEmail!);
+          }
         } else {
-          setClaims(null)
-          setProfile(null)
-          setStreak(0)
-          setIsLoading(false)
-          return
+          setClaims(null);
+          setProfile(null);
+          setStreak(0);
+          setIsLoading(false);
+          setEmail("");
+          return;
         }
 
-        setIsLoading(false)
-        refreshStreak()
-      }, 0)
-    })
+        setIsLoading(false);
+        refreshStreak();
+      }, 0);
+    });
 
-    return () => subscription.unsubscribe()
-  }, [])
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -55,10 +62,11 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         isLoggedIn: !!claims,
         setProfile,
         streak,
-        refreshStreak
+        refreshStreak,
+        email,
       }}
     >
       {children}
     </AuthContext.Provider>
-  )
+  );
 }

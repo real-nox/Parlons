@@ -8,6 +8,7 @@ export type AuthData = {
   setProfile: (profile: any) => void;
   streak: number;
   refreshStreak: () => Promise<void>;
+  email: string;
 };
 
 export const AuthContext = createContext<AuthData>({
@@ -18,6 +19,7 @@ export const AuthContext = createContext<AuthData>({
   setProfile: () => {},
   streak: 0,
   refreshStreak: async () => {},
+  email: "",
 });
 
 export const useAuthContext = () => useContext(AuthContext);
