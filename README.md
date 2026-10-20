@@ -5,7 +5,7 @@
  ![OpenRouter](https://img.shields.io/badge/OpenRouter-IA-6467F2)
  ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
  ![Platforms](https://img.shields.io/badge/Android%20%7C-lightgrey)
- ![License](https://img.shields.io/badge/license-MIT-blue)
+ ![License](https://img.shields.io/badge/license-ISC-blue)
  
  <img width="300" height="300" alt="Parlons Logo" src="https://github.com/user-attachments/assets/0b044bc1-7934-432d-8ba0-58c698f7ebdb" />
 
