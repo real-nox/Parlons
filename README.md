@@ -58,8 +58,6 @@ providers/     React context providers AuthProvider wrapping the app
 services/      Functions that call Supabase
 ```
 
----
-
 ## Installation
 
 ### Prérequis
@@ -181,6 +179,18 @@ Scanne le QR code avec Expo Go, ou appuie sur `a` (Android).
 - [ ] Modification des thèmes et du niveau depuis le profil
 - [ ] Mode brouillon avec sauvegarde automatique
 - [ ] Rappels quotidiens
+
+---
+
+## Contribuer
+ 
+Les contributions sont les bienvenues.
+ 
+1. Fork le projet
+2. Crée ta branche : `git checkout -b feature/ma-fonctionnalite`
+3. Commit : `git commit -m "Ajoute ma fonctionnalité"`
+4. Push : `git push origin feature/ma-fonctionnalite`
+5. Ouvre une Pull Request
 
 ---
 
