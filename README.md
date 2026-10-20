@@ -17,6 +17,8 @@ Application mobile qui permet de s'entraîner à la production écrite en franç
 
 # Fonctionalités
 
+<div align="center">
+
 | | Fonctionnalité | Description |
 |---|---|---|
 | 🔐 | **Authentification** | Inscription / connexion avec Supabase Auth, session persistante |
@@ -29,7 +31,11 @@ Application mobile qui permet de s'entraîner à la production écrite en franç
 | 🔥 | **Streak** | Série de jours consécutifs avec au moins une production, affichée sur l'accueil |
 | ⭐ | **XP** | Points gagnés à chaque production, selon le nombre de mots écrits |
 
+</div>
+ 
 ## Stack technique
+
+<div align="center">
  
 | Couche | Technologie |
 |---|---|
@@ -39,6 +45,8 @@ Application mobile qui permet de s'entraîner à la production écrite en franç
 | Auth & base de données | Supabase (Auth, PostgreSQL, RLS) |
 | Backend serverless | Supabase Edge Functions |
 | IA | OpenRouter |
+
+</div>
  
 ## Captures d'écran
 
