@@ -57,6 +57,7 @@ Application mobile qui permet de s'entraîner à la production écrite en franç
   <tr>
     <td align="center"><img src="docs/pics/choix_theme.jpeg" width="200" alt="Choix des thèmes"/></td>
     <td align="center"><img src="docs/pics/writing.jpeg" width="200" alt="Écriture"/></td>
+   <td align="center"><img src="docs/pics/historique.jpeg" width="200" alt="Historique"/></td>
     <td></td>
   </tr>
   <tr>
