@@ -57,13 +57,12 @@ Application mobile qui permet de s'entraîner à la production écrite en franç
   <tr>
     <td align="center"><img src="docs/pics/choix_theme.jpeg" width="200" alt="Choix des thèmes"/></td>
     <td align="center"><img src="docs/pics/writing.jpeg" width="200" alt="Écriture"/></td>
-   <td align="center"><img src="docs/pics/historique.jpeg" width="200" alt="Historique"/></td>
-    <td></td>
+    <td align="center"><img src="docs/pics/historique.jpeg" width="200" alt="Historique"/></td>
   </tr>
   <tr>
     <td align="center"><b>Choix des thèmes</b><br/>3 sujets générés par l'IA</td>
     <td align="center"><b>Écriture</b><br/>avec objectif de mots</td>
-    <td></td>
+    <td align="center"><b>Historique</b><br/>des productions écrites</td>
   </tr>
 </table>
 </div>
