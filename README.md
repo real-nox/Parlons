@@ -1,11 +1,15 @@
-![React Native](https://img.shields.io/badge/React_Native-Expo-000020?logo=expo&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_DB-3ECF8E?logo=supabase&logoColor=white)
-![OpenRouter](https://img.shields.io/badge/OpenRouter-IA-6467F2)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
-![Platforms](https://img.shields.io/badge/Android%20%7C-lightgrey)
-![License](https://img.shields.io/badge/license-MIT-blue)
+<div align="center">
 
-<img width="300" height="300" alt="Parlons Logo" src="https://github.com/user-attachments/assets/0b044bc1-7934-432d-8ba0-58c698f7ebdb" />
+ ![React Native](https://img.shields.io/badge/React_Native-Expo-000020?logo=expo&logoColor=white)
+ ![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_DB-3ECF8E?logo=supabase&logoColor=white)
+ ![OpenRouter](https://img.shields.io/badge/OpenRouter-IA-6467F2)
+ ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+ ![Platforms](https://img.shields.io/badge/Android%20%7C-lightgrey)
+ ![License](https://img.shields.io/badge/license-MIT-blue)
+ 
+ <img width="300" height="300" alt="Parlons Logo" src="https://github.com/user-attachments/assets/0b044bc1-7934-432d-8ba0-58c698f7ebdb" />
+
+</div>
 
 # Parlons ✏️
 ### Entraînement à la production écrite en français
@@ -36,10 +40,32 @@ Application mobile qui permet de s'entraîner à la production écrite en franç
 | Backend serverless | Supabase Edge Functions |
 | IA | OpenRouter |
  
----
- 
 ## Captures d'écran
-  
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center"><img src="docs/pics/login.jpeg" width="200" alt="Connexion"/></td>
+    <td align="center"><img src="docs/pics/register.jpeg" width="200" alt="Inscription"/></td>
+    <td align="center"><img src="docs/pics/homepage.jpeg" width="200" alt="Accueil"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Connexion</b></td>
+    <td align="center"><b>Inscription</b></td>
+    <td align="center"><b>Accueil</b><br/>streak et dernières productions</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/pics/choix_theme.jpeg" width="200" alt="Choix des thèmes"/></td>
+    <td align="center"><img src="docs/pics/writing.jpeg" width="200" alt="Écriture"/></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Choix des thèmes</b><br/>3 sujets générés par l'IA</td>
+    <td align="center"><b>Écriture</b><br/>avec objectif de mots</td>
+    <td></td>
+  </tr>
+</table>
+</div>
 
 
  
